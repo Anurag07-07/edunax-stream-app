@@ -1,0 +1,8 @@
+.hidden-scrollbar{
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hidden-scrollbar::-webkit-scrollbar{
+  display: none;
+}

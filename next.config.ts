@@ -1,0 +1,44 @@
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'utfs.io' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
+      { protocol: 'https', hostname: 'example-bucket.s3.amazonaws.com' },
+    ],
+  },
+
+
+  webpack: (config, { isServer, webpack }) => {
+    config.module.rules.push({
+      test:/\.mjs$/,
+      include:/node_modules/,
+      type:"javascript/auto"
+    })
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        stream: require.resolve('stream-browserify'),
+        crypto: require.resolve('crypto-browserify'),
+      };
+
+      config.plugins.push(
+        new webpack.ProvidePlugin({
+          process: 'process/browser',
+        }),
+        new webpack.NormalModuleReplacementPlugin(
+          /node:crypto/,
+         //@ts-expect-error idk
+          (resource) => {
+            resource.request = resource.request.replace(/^node:/, '');
+          }
+        )
+      );
+    }
+    return config;
+  },
+};
+
+export default nextConfig;
