@@ -19,7 +19,7 @@ const CreatorPage = async ({ params }: CreatorPageProps) => {
 
   return (
     <div className="h-full">
-      <StreamPlayer user={user} stream={user.stream} isFollowing />
+      <StreamPlayer user={user} stream={user.stream} isFollowing serverUrl={process.env.LIVEKIT_WS_URL!} />
     </div>
   );
 };
