@@ -13,7 +13,6 @@ const Search = () => {
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!value) return
-
     const url = qs.stringifyUrl(
       { url: '/search', query: { term: value } },
       { skipEmptyString: true }
@@ -26,25 +25,32 @@ const Search = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="relative w-full max-w-[340px] lg:max-w-[420px] flex items-center"
+      className="relative w-full max-w-[320px] lg:max-w-[400px] flex items-center"
     >
       <div className={`
         flex items-center w-full h-10 rounded-full
-        border transition-all duration-300
-        bg-muted/60 backdrop-blur-sm
+        border transition-all duration-250
         ${focused
-          ? "border-[rgba(139,92,246,0.70)] shadow-[0_0_0_3px_rgba(139,92,246,0.15)]"
-          : "border-border hover:border-[rgba(139,92,246,0.35)]"
+          /* ── focused: black border + subtle shadow ── */
+          ? "border-foreground/70 shadow-[0_0_0_3px_rgba(0,0,0,0.08)] dark:shadow-[0_0_0_3px_rgba(255,255,255,0.08)] bg-background"
+          /* ── resting: gray border ── */
+          : "border-border bg-muted/70 dark:bg-white/[0.04] hover:border-foreground/30 hover:bg-muted"
         }
+        backdrop-blur-sm
       `}>
+
         {/* Search icon */}
         <div className="pl-3.5 pr-2 flex items-center shrink-0">
-          <SearchIcon className={`h-4 w-4 transition-colors duration-200 ${focused ? "text-violet-400" : "text-muted-foreground"}`} />
+          <SearchIcon className={`
+            h-4 w-4 transition-colors duration-200
+            ${focused ? "text-foreground" : "text-muted-foreground"}
+          `} />
         </div>
 
+        {/* Input */}
         <input
           type="text"
-          placeholder="Search streamers or games…"
+          placeholder="Search sessions, educators…"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onFocus={() => setFocused(true)}
@@ -52,12 +58,11 @@ const Search = () => {
           className="
             flex-1 bg-transparent text-sm text-foreground
             placeholder:text-muted-foreground
-            outline-none border-none
-            h-full
+            outline-none border-none h-full
           "
         />
 
-        {/* Clear button */}
+        {/* Clear */}
         {value && (
           <button
             type="button"
@@ -68,14 +73,15 @@ const Search = () => {
           </button>
         )}
 
-        {/* Search submit */}
+        {/* Submit — black in light, white in dark */}
         <button
           type="submit"
           className="
             h-10 px-4 rounded-r-full shrink-0
-            bg-gradient-to-r from-[#7C3AED] to-[#06B6D4]
-            text-white text-sm font-medium
-            hover:opacity-90 transition-opacity
+            bg-foreground text-background
+            text-sm font-semibold
+            hover:opacity-85 active:scale-[0.98]
+            transition-all duration-200
             flex items-center gap-1.5
           "
         >

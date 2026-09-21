@@ -30,13 +30,13 @@ const geistMono = Geist_Mono({
 
 // Page metadata
 export const metadata: Metadata = {
-  title: "Edunax GameHub — Stream, Watch & Connect",
+  title: "Edunax — Live Learning for Students",
   description:
-    "The ultimate game streaming platform. Watch live streams, chat in real‑time, and connect with your favourite creators.",
-  keywords: ["gaming", "streaming", "live stream", "esports", "gamehub"],
+    "The student-first live streaming platform. Teach DSA, Web Dev, MBBS, CA and more. Overcome hesitation, improve communication, and grow your skills by teaching live.",
+  keywords: ["education", "live learning", "student streaming", "teach online", "DSA", "MBBS", "CA", "web development", "edunax"],
   openGraph: {
-    title: "Edunax GameHub",
-    description: "Stream. Watch. Connect.",
+    title: "Edunax — Teach What You Know. Learn What You Don't.",
+    description: "Live learning platform for Indian students. Stream, teach, and grow.",
     type: "website",
   },
 };

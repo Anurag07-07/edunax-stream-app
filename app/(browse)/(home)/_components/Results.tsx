@@ -2,7 +2,7 @@ import { getStreams } from '@/lib/feed-service'
 import React from 'react'
 import { ResultCard, ResultCardSkeleton } from './ResultCard'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Flame } from 'lucide-react'
+import { GraduationCap, Flame } from 'lucide-react'
 
 export const Results = async () => {
   const data = await getStreams()
@@ -14,17 +14,17 @@ export const Results = async () => {
         <div className="
           flex items-center justify-center
           w-8 h-8 rounded-lg
-          bg-gradient-to-br from-rose-500 to-orange-400
-          shadow-[0_0_12px_rgba(244,63,94,0.40)]
+          bg-gradient-to-br from-violet-500 to-cyan-500
+          shadow-[0_0_12px_rgba(139,92,246,0.40)]
         ">
-          <Flame className="h-4 w-4 text-white" />
+          <GraduationCap className="h-4 w-4 text-white" />
         </div>
         <div>
           <h2 className="text-lg font-bold gradient-text">
-            Live Right Now
+            Live Sessions
           </h2>
           <p className="text-xs text-muted-foreground">
-            Streams we think you&apos;ll love
+            Join a class happening right now
           </p>
         </div>
       </div>
