@@ -29,6 +29,7 @@ export default async function UserPage({
         user={user}
         stream={user.stream}
         isFollowing={isFollow}
+        serverUrl={process.env.LIVEKIT_WS_URL!}
       />
     </div>
   );

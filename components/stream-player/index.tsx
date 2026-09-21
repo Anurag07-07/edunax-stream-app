@@ -35,12 +35,14 @@ interface StreamPlayerProps{
     user:CustomUser
     stream:CustomStream;
     isFollowing:boolean;
+    serverUrl:string;
 }
 
 export const StreamPlayer = ({
     user,
     stream,
-    isFollowing
+    isFollowing,
+    serverUrl
 }:StreamPlayerProps) => {
     const {
         token,
@@ -69,7 +71,7 @@ export const StreamPlayer = ({
           }
             <LiveKitRoom
                 token={token}
-                serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_WS_URL}
+                serverUrl={serverUrl}
                 className={cn("grid grid-cols-1 lg:gap-y-0 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 h-full",
                     collapsed && "lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
                 )}
