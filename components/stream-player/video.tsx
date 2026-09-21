@@ -1,36 +1,46 @@
 'use client'
 
-import { ConnectionState,Track } from "livekit-client"
-import { useConnectionState,useRemoteParticipant,useTracks } from "@livekit/components-react"
+import { ConnectionState, Track } from "livekit-client"
+import { useConnectionState, useRemoteParticipant, useTracks } from "@livekit/components-react"
 import { OfflineVideo } from "./offline-video"
 import { LoadingVideo } from "./loading-video"
 import { LiveVideo } from "./live-video"
 import { Skeleton } from "../ui/skeleton"
 
-interface VideoProps{
-  hostname:string,
-  hostIdentity:string
+interface VideoProps {
+  hostname: string,
+  hostIdentity: string
 }
 
 export const Video = ({
   hostname,
   hostIdentity
-}:VideoProps) => {
+}: VideoProps) => {
   const connectionState = useConnectionState();
   const participant = useRemoteParticipant(hostIdentity)
+
+  // Include Camera, Microphone AND ScreenShare so RTMP/OBS ingress tracks are captured.
+  // Also do NOT filter by identity here — ingress participants have a different identity.
   const tracks = useTracks([
     Track.Source.Camera,
-    Track.Source.Microphone
-  ]).filter((track)=>track.participant.identity === hostIdentity)
+    Track.Source.Microphone,
+    Track.Source.ScreenShare,
+  ])
 
   let content;
 
-  if (!participant && connectionState === ConnectionState.Connected) {
-    content = <OfflineVideo username={hostname}></OfflineVideo>
-  }else if(!participant || tracks.length ===0){
-    content = <LoadingVideo label={connectionState}></LoadingVideo>
-  }else{
-    content = <LiveVideo participant={participant}></LiveVideo>
+  // Still connecting to LiveKit room — show spinner
+  if (connectionState === ConnectionState.Connecting) {
+    content = <LoadingVideo label={connectionState} />
+  // Connected, but no participant and no tracks → truly offline
+  } else if (connectionState === ConnectionState.Connected && !participant && tracks.length === 0) {
+    content = <OfflineVideo username={hostname} />
+  // We have a participant OR tracks → show live video
+  } else if (participant) {
+    content = <LiveVideo participant={participant} />
+  // Disconnected from room
+  } else {
+    content = <LoadingVideo label={connectionState} />
   }
 
   return (

@@ -61,12 +61,16 @@ export const LiveVideo = ({
   const documentRef = { current: document } as React.RefObject<Document>
   useEventListener('fullscreenchange', handleFullScreenChange, documentRef)
     
-  useTracks([Track.Source.Camera,Track.Source.Microphone])
-    .filter((track)=>track.participant.identity===participant.identity)
-    .forEach((track)=>{
-        if(videoRef.current){
-            track.publication.track?.attach(videoRef.current)
-        }
+  useTracks([
+    Track.Source.Camera,
+    Track.Source.Microphone,
+    Track.Source.ScreenShare,
+  ])
+    .filter((track) => track.participant.identity === participant.identity)
+    .forEach((track) => {
+      if (videoRef.current) {
+        track.publication.track?.attach(videoRef.current)
+      }
     })
 
     return (
