@@ -7,19 +7,23 @@ import { InfoModal } from "./info-modal";
 
 interface InfoCardProps{
     name:string;
+    description:string | null;
     thumbnailUrl:string | null;
     hostIdentity:string;
+    hostExternalIdentity:string;
     viewerIdentity:string;
 }
 
 export const InfoCard=({
     name,
+    description,
     thumbnailUrl,
     hostIdentity,
+    hostExternalIdentity,
     viewerIdentity
 }:InfoCardProps)=>{
 
-    const hostAsViewer=`host-${hostIdentity}`
+    const hostAsViewer=`host-${hostExternalIdentity}`
     const isHost=viewerIdentity===hostAsViewer;
 
     if(!isHost) return null;
@@ -41,6 +45,7 @@ export const InfoCard=({
                     </div>
                     <InfoModal 
                         initialName={name}
+                        initialDescription={description}
                         initialThumbnailUrl={thumbnailUrl}
                     />
                 </div>
@@ -52,6 +57,14 @@ export const InfoCard=({
                         </h3>
                         <p className="text-sm font-semibold">
                             {name}
+                        </p>
+                    </div>
+                    <div>
+                        <h3 className="text-sm text-muted-foreground mb-2">
+                            Description
+                        </h3>
+                        <p className="text-sm leading-6 text-foreground/80">
+                            {description || "No description added yet."}
                         </p>
                     </div>
                     <div>

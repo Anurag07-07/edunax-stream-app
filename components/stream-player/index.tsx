@@ -19,6 +19,7 @@ type CustomStream = {
   isChatDelayed: boolean;
   isChatFollowersOnly: boolean;
   isLive: boolean;
+  description: string | null;
   thumbnailUrl: string | null;
   name: string;
 };
@@ -91,8 +92,10 @@ export const StreamPlayer = ({
                     ></Header>
                     <InfoCard 
                      hostIdentity={user.id}
+                     hostExternalIdentity={user.externalUserId}
                      viewerIdentity={identity}
                      name={stream.name}
+                     description={stream.description}
                      thumbnailUrl={stream.thumbnailUrl}
                     ></InfoCard>
                     <AboutCard

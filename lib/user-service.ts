@@ -15,6 +15,7 @@ export const getUserByUsername = async(username:string)=>{
         select:{
           id:true,
           isLive:true,
+          description:true,
           isChatDelayed:true,
           isChatEnabled:true,
           isChatFollowersOnly:true,
