@@ -1,7 +1,7 @@
 'use client'
 
 import { ConnectionState, Track } from "livekit-client"
-import { useConnectionState, useParticipants, useRemoteParticipant, useTracks } from "@livekit/components-react"
+import { useConnectionState, useTracks } from "@livekit/components-react"
 import { OfflineVideo } from "./offline-video"
 import { LoadingVideo } from "./loading-video"
 import { LiveVideo } from "./live-video"
@@ -17,11 +17,6 @@ export const Video = ({
   hostIdentity
 }: VideoProps) => {
   const connectionState = useConnectionState();
-  const participants = useParticipants();
-
-  // Named participant (browser-streamer). Will be null for OBS/RTMP ingress.
-  const participant = useRemoteParticipant(hostIdentity)
-
   // Capture ALL remote tracks (camera, mic, screenshare).
   // For RTMP/OBS ingress the ingress participant identity ≠ hostIdentity,
   // so we must not filter by identity here.
@@ -36,8 +31,7 @@ export const Video = ({
   const ingressParticipant = tracks.length > 0 ? tracks[0].participant : null;
 
   // Use named participant first, fall back to ingress participant
-  const remoteParticipant = participants.find((currentParticipant) => !currentParticipant.isLocal);
-  const activeParticipant = participant ?? remoteParticipant ?? ingressParticipant;
+  const activeParticipant = ingressParticipant;
 
   let content;
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { UserAvatar, UserAvatarSkeleton } from '../UserAvatar'
 import { VerifiedMark } from '../verified-mark'
-import { useParticipants, useRemoteParticipant, useTracks } from '@livekit/components-react'
+import { useParticipants, useTracks } from '@livekit/components-react'
 import { Track } from 'livekit-client'
 import { Users } from 'lucide-react'
 import { Action, ActionsSkeleton } from './Action'
@@ -20,8 +20,6 @@ export const Header = ({
   imageUrl, hostName, hostIdentity, viewerIdentity, isFollowing, name
 }: HeaderProps) => {
   const participants = useParticipants()
-  const participant = useRemoteParticipant(hostIdentity)
-
   // Also detect RTMP/OBS ingress streams (ingress identity ≠ hostIdentity)
   const tracks = useTracks([
     Track.Source.Camera,
@@ -30,8 +28,7 @@ export const Header = ({
   ])
   const ingressParticipant = tracks.length > 0 ? tracks[0].participant : null;
 
-  const remoteParticipant = participants.find((currentParticipant) => !currentParticipant.isLocal)
-  const isLive = !!(participant ?? remoteParticipant ?? ingressParticipant)
+  const isLive = tracks.length > 0
   const participantCount = participants.length - 1
 
   const hostAsViewer = `host-${hostIdentity}`

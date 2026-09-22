@@ -30,10 +30,12 @@ export async function POST(req: Request) {
 
     case "ingress_ended":
       console.log("Ingress ended:", event.ingressInfo?.ingressId);
-      await db.stream.update({
-        where: { ingressId: event.ingressInfo?.ingressId ?? "" },
-        data: { isLive: false },
-      });
+      if (event.ingressInfo?.ingressId) {
+        await db.stream.updateMany({
+          where: { ingressId: event.ingressInfo.ingressId },
+          data: { isLive: false },
+        });
+      }
       break;
 
     case "participant_joined":
@@ -73,12 +75,18 @@ export async function POST(req: Request) {
       break;
 
     case "room_finished": {
-      // room name == userId for browser-based streams
       const roomName = event.room?.name;
       console.log("Room finished:", roomName);
       if (roomName) {
         await db.stream.updateMany({
-          where: { userId: roomName },
+          where: {
+            user: {
+              OR: [
+                { id: roomName },
+                { externalUserId: roomName },
+              ],
+            },
+          },
           data: { isLive: false },
         });
       }
