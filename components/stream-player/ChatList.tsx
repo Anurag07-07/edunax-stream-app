@@ -2,11 +2,12 @@
 import React from 'react'
 
 import { ReceivedChatMessage } from '@livekit/components-react'
+import { PersistedChatMessage } from '@/actions/chat';
 import { ChatMessage } from './ChatMessage';
 import { Skeleton } from '../ui/skeleton';
 
 interface ChatListProps{
-  messages:ReceivedChatMessage[];
+  messages:(ReceivedChatMessage | PersistedChatMessage)[];
   isHidden:boolean
 }
 

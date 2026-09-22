@@ -111,7 +111,9 @@ export const StreamPlayer = ({
                     collapsed && "hidden"
                 )}>
                     <Chat 
+                      streamId={stream.id}
                         viewerName={name}
+                        viewerIdentity={identity}
                         hostName={user.username}
                         hostIdentity={user.id}
                         isFollowing={isFollowing}

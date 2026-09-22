@@ -50,12 +50,25 @@ model Stream{
 
   userId String @unique
   user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  messages ChatMessage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
   @@index([userId])
   @@index([ingressId])
+}
+
+model ChatMessage {
+  id String @id @default(uuid())
+  streamId String
+  stream Stream @relation(fields: [streamId], references: [id], onDelete: Cascade)
+  authorIdentity String
+  authorName String
+  content String @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([streamId, createdAt])
 }
 
 model Follow{

@@ -2,10 +2,11 @@ import React from 'react'
 import {format} from 'date-fns'
 
 import { ReceivedChatMessage } from '@livekit/components-react'
+import { PersistedChatMessage } from '@/actions/chat'
 import { stringToColor } from '@/lib/utils'
 
 interface ChatMessageProps{
-  data:ReceivedChatMessage
+  data:ReceivedChatMessage | PersistedChatMessage
 }
 
 export const ChatMessage = ({data}:ChatMessageProps) => {

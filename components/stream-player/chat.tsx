@@ -9,11 +9,14 @@ import { ChatHeader } from "./chat-header";
 import { ChatForm } from "./ChatForm";
 import { ChatList } from "./ChatList";
 import { ChatCommunity } from "./chat-community";
+import { getChatMessages, PersistedChatMessage, saveChatMessage } from "@/actions/chat";
 // import { ChatHeader } from "./chat-header";
 
 interface ChatProps{
     hostName:string;
     hostIdentity:string;
+    streamId:string;
+    viewerIdentity:string;
     viewerName:string;
     isFollowing:boolean;
     isChatEnabled:boolean;
@@ -24,6 +27,8 @@ interface ChatProps{
 export const Chat=({
     hostName,
     hostIdentity,
+    streamId,
+    viewerIdentity,
     viewerName,
     isFollowing,
     isChatEnabled,
@@ -39,7 +44,12 @@ export const Chat=({
     const isHidden=!isChatEnabled || !isOnline;
 
     const [value,setvalue]=useState("");
+    const [savedMessages, setSavedMessages] = useState<PersistedChatMessage[]>([]);
     const {chatMessages:messages,send}=useChat();
+
+    useEffect(()=>{
+        getChatMessages(streamId).then(setSavedMessages).catch(() => setSavedMessages([]));
+    },[streamId])
 
     useEffect(()=>{
         if(matches){
@@ -48,13 +58,33 @@ export const Chat=({
     },[matches,onExpand])
 
     const reversedMessages=useMemo(()=>{
-        return messages.sort((a,b)=>b.timestamp-a.timestamp);
-    },[messages])
+        const combined = [...savedMessages, ...messages];
+        const unique = combined.filter((message, index, allMessages) =>
+            allMessages.findIndex((candidate) =>
+                candidate.timestamp === message.timestamp &&
+                candidate.message === message.message &&
+                candidate.from?.identity === message.from?.identity
+            ) === index
+        );
+        return unique.sort((a,b)=>b.timestamp-a.timestamp);
+    },[messages, savedMessages])
 
     const onSubmit=()=>{
         if(!send) return;
 
-        send(value);
+        const content = value.trim();
+        if (!content) return;
+        send(content);
+        saveChatMessage({
+            streamId,
+            content,
+            authorIdentity: viewerIdentity,
+            authorName: viewerName,
+        }).then((savedMessage) => {
+            if (savedMessage) {
+                setSavedMessages((current) => [...current, savedMessage]);
+            }
+        }).catch(() => undefined);
         setvalue("");
     };
 
