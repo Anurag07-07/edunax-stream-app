@@ -1,7 +1,7 @@
 'use client'
 
 import { ConnectionState, Track } from "livekit-client"
-import { useConnectionState, useRemoteParticipant, useTracks } from "@livekit/components-react"
+import { useConnectionState, useParticipants, useRemoteParticipant, useTracks } from "@livekit/components-react"
 import { OfflineVideo } from "./offline-video"
 import { LoadingVideo } from "./loading-video"
 import { LiveVideo } from "./live-video"
@@ -17,34 +17,45 @@ export const Video = ({
   hostIdentity
 }: VideoProps) => {
   const connectionState = useConnectionState();
+  const participants = useParticipants();
+
+  // Named participant (browser-streamer). Will be null for OBS/RTMP ingress.
   const participant = useRemoteParticipant(hostIdentity)
 
-  // Include Camera, Microphone AND ScreenShare so RTMP/OBS ingress tracks are captured.
-  // Also do NOT filter by identity here — ingress participants have a different identity.
+  // Capture ALL remote tracks (camera, mic, screenshare).
+  // For RTMP/OBS ingress the ingress participant identity ≠ hostIdentity,
+  // so we must not filter by identity here.
   const tracks = useTracks([
     Track.Source.Camera,
     Track.Source.Microphone,
     Track.Source.ScreenShare,
   ])
 
+  // For RTMP ingress: no named participant, but tracks exist —
+  // grab the participant from the first available track.
+  const ingressParticipant = tracks.length > 0 ? tracks[0].participant : null;
+
+  // Use named participant first, fall back to ingress participant
+  const remoteParticipant = participants.find((currentParticipant) => !currentParticipant.isLocal);
+  const activeParticipant = participant ?? remoteParticipant ?? ingressParticipant;
+
   let content;
 
-  // Still connecting to LiveKit room — show spinner
   if (connectionState === ConnectionState.Connecting) {
+    // Still joining the LiveKit room
     content = <LoadingVideo label={connectionState} />
-  // Connected, but no participant and no tracks → truly offline
-  } else if (connectionState === ConnectionState.Connected && !participant && tracks.length === 0) {
+  } else if (connectionState === ConnectionState.Connected && !activeParticipant) {
+    // Connected but nobody is streaming → truly offline
     content = <OfflineVideo username={hostname} />
-  // We have a participant OR tracks → show live video
-  } else if (participant) {
-    content = <LiveVideo participant={participant} />
-  // Disconnected from room
+  } else if (activeParticipant) {
+    // Either a named host or an ingress participant
+    content = <LiveVideo participant={activeParticipant} />
   } else {
     content = <LoadingVideo label={connectionState} />
   }
 
   return (
-    <div className=" aspect-video border-b group relative">
+    <div className="aspect-video border-b group relative">
       {content}
     </div>
   )

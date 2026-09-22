@@ -43,12 +43,12 @@ export const LiveVideo = ({
         onVolumeChange(0);
     },[])
     
-    const toggleFullscreen=()=>{
+    const toggleFullscreen = async () => {
         if(isFullscreen){
             document.exitFullscreen()
             setIsFullscreen(false);
         }else if(wrapperRef?.current){
-            wrapperRef.current.requestFullscreen()
+            await wrapperRef.current.requestFullscreen()
             setIsFullscreen(true);
         }
     }

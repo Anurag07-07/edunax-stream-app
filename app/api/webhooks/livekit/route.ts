@@ -21,35 +21,72 @@ export async function POST(req: Request) {
 
     switch (event.event) {
     case "ingress_started":
-    console.log("Ingress started:", event.ingressInfo?.ingressId);
-    await db.stream.update({
-      where: { ingressId: event.ingressInfo?.ingressId ?? "" },
-      data: { isLive: true },
-    });
-    break;
+      console.log("Ingress started:", event.ingressInfo?.ingressId);
+      await db.stream.update({
+        where: { ingressId: event.ingressInfo?.ingressId ?? "" },
+        data: { isLive: true },
+      });
+      break;
 
-  case "ingress_ended":
-    console.log("Ingress ended:", event.ingressInfo?.ingressId);
-    await db.stream.update({
-      where: { ingressId: event.ingressInfo?.ingressId ?? "" },
-      data: { isLive: false },
-    });
-    break;
+    case "ingress_ended":
+      console.log("Ingress ended:", event.ingressInfo?.ingressId);
+      await db.stream.update({
+        where: { ingressId: event.ingressInfo?.ingressId ?? "" },
+        data: { isLive: false },
+      });
+      break;
 
-  case "participant_joined":
-    console.log("Participant joined:", event.participant?.identity);
-    break;
+    case "participant_joined":
+      console.log("Participant joined:", event.participant?.identity);
+      if (event.participant?.identity) {
+        await db.stream.updateMany({
+          where: {
+            user: {
+              OR: [
+                { id: event.participant.identity },
+                { externalUserId: event.participant.identity },
+                { externalUserId: event.participant.identity.replace(/^host-/, "") },
+              ],
+            },
+          },
+          data: { isLive: true },
+        });
+      }
+      break;
 
-  case "participant_left":
-    console.log("Participant left:", event.participant?.identity);
-    break;
+    case "participant_left":
+      console.log("Participant left:", event.participant?.identity);
+      if (event.participant?.identity) {
+        await db.stream.updateMany({
+          where: {
+            user: {
+              OR: [
+                { id: event.participant.identity },
+                { externalUserId: event.participant.identity },
+                { externalUserId: event.participant.identity.replace(/^host-/, "") },
+              ],
+            },
+          },
+          data: { isLive: false },
+        });
+      }
+      break;
 
-  case "room_finished":
-    console.log("Room finished:", event.room?.name);
-    break;
+    case "room_finished": {
+      // room name == userId for browser-based streams
+      const roomName = event.room?.name;
+      console.log("Room finished:", roomName);
+      if (roomName) {
+        await db.stream.updateMany({
+          where: { userId: roomName },
+          data: { isLive: false },
+        });
+      }
+      break;
+    }
 
     default:
-    console.log("Unhandled event:", event.event);
+      console.log("Unhandled event:", event.event);
   }
 
 

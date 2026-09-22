@@ -28,23 +28,30 @@ const roomService = new RoomServiceClient(
 
 const ingressClient = new IngressClient(LIVEKIT_API_URL)
 
-export const resetIngress = async (hostIdentity: string) => {
-  const ingresses = await ingressClient.listIngress({
-    roomName: hostIdentity,
-  })
+export const resetIngress = async (hostId: string, externalUserId?: string) => {
+  // List ingresses for both old (externalUserId) and new (hostId) room names
+  // so stale ingresses from before the identity fix are also removed.
+  const roomNames = externalUserId ? [hostId, externalUserId] : [hostId]
 
-  const rooms = await roomService.listRooms([hostIdentity])
+  const allIngresses = (
+    await Promise.all(
+      roomNames.map((room) => ingressClient.listIngress({ roomName: room }))
+    )
+  ).flat()
 
-  for (const room of rooms) {
+  const allRooms = (await roomService.listRooms(roomNames))
+
+  for (const room of allRooms) {
     await roomService.deleteRoom(room.name)
   }
 
-  for (const ingress of ingresses) {
+  for (const ingress of allIngresses) {
     if (ingress.ingressId) {
       await ingressClient.deleteIngress(ingress.ingressId)
     }
   }
 }
+
 export const createIngress = async (ingressType: IngressInput) => {
   const self = await getSelf()
 
@@ -52,13 +59,13 @@ export const createIngress = async (ingressType: IngressInput) => {
     throw new Error(`Could not retrieve current user`)
   }
 
-  await resetIngress(self.externalUserId)
+  await resetIngress(self.id, self.externalUserId)
 
   const options: CreateIngressOptions = {
     name: self.username,
-    roomName: self.externalUserId,
+    roomName: self.id,
     participantName: self.username,
-    participantIdentity: self.externalUserId,
+    participantIdentity: self.id,
   }
 
   if (ingressType === IngressInput.WHIP_INPUT) {
