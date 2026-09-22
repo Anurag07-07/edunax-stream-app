@@ -25,16 +25,16 @@ const Search = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="relative w-full max-w-[320px] lg:max-w-[400px] flex items-center"
+      className="relative w-full max-w-[260px] lg:max-w-[430px] flex items-center"
     >
       <div className={`
-        flex items-center w-full h-10 rounded-full
+        flex items-center w-full h-10 rounded-xl
         border transition-all duration-250
         ${focused
           /* ── focused: black border + subtle shadow ── */
-          ? "border-foreground/70 shadow-[0_0_0_3px_rgba(0,0,0,0.08)] dark:shadow-[0_0_0_3px_rgba(255,255,255,0.08)] bg-background"
+          ? "border-cyan-300/50 shadow-[0_0_0_3px_rgba(103,232,249,0.08)] bg-background/80"
           /* ── resting: gray border ── */
-          : "border-border bg-muted/70 dark:bg-white/[0.04] hover:border-foreground/30 hover:bg-muted"
+          : "border-white/10 bg-white/[0.04] hover:border-cyan-200/30 hover:bg-white/[0.07]"
         }
         backdrop-blur-sm
       `}>
@@ -77,8 +77,8 @@ const Search = () => {
         <button
           type="submit"
           className="
-            h-10 px-4 rounded-r-full shrink-0
-            bg-foreground text-background
+            h-10 px-4 rounded-r-xl shrink-0
+            bg-white text-black
             text-sm font-semibold
             hover:opacity-85 active:scale-[0.98]
             transition-all duration-200

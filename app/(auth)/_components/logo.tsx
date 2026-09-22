@@ -1,20 +1,6 @@
-import { Poppins } from "next/font/google";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-
-const font = Poppins({
-  subsets:["latin"],
-  weight:['200','300','400','500','600','700','800']
-})
-
 export const Logo = ()=>{
-  return <div className=" flex flex-col items-center gap-y-4">
-    <div className="rounded-full p-1 flex justify-center items-center flex-col bg-white">
-      <Image src='/alien-svgrepo-com.svg' alt="Logo" width={80} height={80}></Image>
-    </div>
-    <div className=" flex flex-col items-center">
-      <p className={cn("text-xl font-semibold",font.className)}>EDUNAX GAMEHUB</p>
-      <p className={cn("text-sm text-muted-foreground",font.className)}>Let&apos;s play</p>
-    </div>
+  return <div className="flex items-center gap-3">
+    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#dff7ff] via-[#8ba7ff] to-[#7258ff] text-lg font-black text-[#07090d] shadow-[0_0_24px_rgba(103,232,249,0.28)]">E</div>
+    <div><p className="text-sm font-black tracking-[0.2em] text-white">EDUNAX</p><p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Live learning</p></div>
   </div>
 }

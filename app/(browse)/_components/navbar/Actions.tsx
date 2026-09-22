@@ -1,6 +1,6 @@
 import { SignInButton, UserButton } from '@clerk/nextjs'
 import { currentUser } from '@clerk/nextjs/server'
-import { Clapperboard, Home } from 'lucide-react'
+import { Clapperboard, Home, Radio } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { ThemeToggle } from '@/components/ThemeToggle'
@@ -16,9 +16,9 @@ const Actions = async () => {
         title="Go to Home"
         className="
           flex items-center justify-center
-          w-9 h-9 rounded-full
-          border border-border
-          bg-muted/60 hover:bg-muted
+          w-9 h-9 rounded-xl
+          border border-white/10
+          bg-white/[0.04] hover:bg-white/[0.10]
           text-muted-foreground hover:text-foreground
           transition-all duration-200
           hover:shadow-[0_0_12px_rgba(139,92,246,0.35)]
@@ -36,7 +36,7 @@ const Actions = async () => {
         <SignInButton>
           <button className="
             btn-gradient
-            h-9 px-4 rounded-full
+            h-9 px-4 rounded-xl
             text-sm font-semibold
             flex items-center gap-x-1.5
             shadow-[0_0_16px_rgba(124,58,237,0.35)]
@@ -62,7 +62,7 @@ const Actions = async () => {
               hover:shadow-[0_0_10px_rgba(139,92,246,0.25)]
             "
           >
-            <Clapperboard className="h-4 w-4" />
+              <Radio className="h-4 w-4 text-cyan-300" />
             <span className="hidden lg:block">Dashboard</span>
           </Link>
 

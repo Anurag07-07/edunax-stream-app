@@ -2,30 +2,21 @@ import { getStreams } from '@/lib/feed-service'
 import React from 'react'
 import { ResultCard, ResultCardSkeleton } from './ResultCard'
 import { Skeleton } from '@/components/ui/skeleton'
-import { GraduationCap, Flame } from 'lucide-react'
+import { Radio, Sparkles } from 'lucide-react'
 
 export const Results = async () => {
   const data = await getStreams()
 
   return (
-    <div className="py-6">
+    <div className="py-8">
       {/* Section header */}
-      <div className="flex items-center gap-x-3 mb-6">
-        <div className="
-          flex items-center justify-center
-          w-8 h-8 rounded-lg
-          bg-gradient-to-br from-violet-500 to-cyan-500
-          shadow-[0_0_12px_rgba(139,92,246,0.40)]
-        ">
-          <GraduationCap className="h-4 w-4 text-white" />
+      <div className="mb-6 flex items-center gap-x-3">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-rose-300/20 bg-rose-300/10 text-rose-300">
+          <Radio className="h-4 w-4" />
         </div>
         <div>
-          <h2 className="text-lg font-bold gradient-text">
-            Live Sessions
-          </h2>
-          <p className="text-xs text-muted-foreground">
-            Join a class happening right now
-          </p>
+          <p className="eyebrow">Live right now</p>
+          <h2 className="text-xl font-bold tracking-tight text-white">Open rooms</h2>
         </div>
       </div>
 
@@ -35,19 +26,12 @@ export const Results = async () => {
           flex flex-col items-center justify-center py-20 gap-y-4
           text-center
         ">
-          <div className="
-            w-16 h-16 rounded-2xl
-            bg-gradient-to-br from-[#7C3AED]/20 to-[#06B6D4]/20
-            border border-[rgba(139,92,246,0.25)]
-            flex items-center justify-center
-          ">
-            <Flame className="h-7 w-7 text-muted-foreground" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-cyan-200/15 bg-cyan-300/[0.06]">
+            <Sparkles className="h-7 w-7 text-cyan-200" />
           </div>
           <div>
-            <p className="font-semibold text-foreground">No streams yet</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Be the first to go live today!
-            </p>
+            <p className="font-semibold text-white">The network is quiet</p>
+            <p className="mt-1 text-sm text-slate-500">Be the first signal in the room.</p>
           </div>
         </div>
       )}

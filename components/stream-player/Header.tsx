@@ -38,13 +38,13 @@ export const Header = ({
     <div className="
       relative px-4 py-4
       rounded-xl mx-4
-      glass-card
-      border border-[rgba(139,92,246,0.20)]
+      cinematic-panel
+      border border-white/10
     ">
       {/* Gradient top band */}
       <div className="
         absolute inset-x-0 top-0 h-[2px] rounded-t-xl
-        bg-gradient-to-r from-[#7C3AED] via-[#06B6D4] to-[#F43F5E]
+        bg-gradient-to-r from-cyan-300 via-indigo-400 to-rose-400
         opacity-80
       " />
 
@@ -74,8 +74,8 @@ export const Header = ({
               <div className="
                 inline-flex items-center gap-x-1.5
                 px-2.5 py-0.5 rounded-full
-                bg-rose-500/15 border border-rose-500/30
-                text-rose-400 text-xs font-semibold
+                bg-rose-400/10 border border-rose-300/20
+                text-rose-300 text-xs font-semibold
               ">
                 <Users className="h-3 w-3" />
                 <span>
